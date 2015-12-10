@@ -1,0 +1,33 @@
+[user]
+	name = Hironobu Saitoh
+	email = hiro@hironobu.org
+
+[core]
+	#editor = vim -c "set fenc=utf-8"
+[color]
+  status = auto
+  diff = auto
+  branch = auto
+  interactive = auto
+  grep = auto
+
+[alias]
+  b = branch
+  st = status
+  ci = commit
+  di = diff
+  co = checkout
+  tr = log --graph --pretty='format:%C(yellow)%h%Creset %s %Cgreen(%an)%Creset %Cred%d%Creset'
+[push]
+	default = matching
+
+[filter "media"]
+	clean = git media clean %f
+	smudge = git media smudge %f
+	required = true
+[filter "hawser"]
+	clean = git hawser clean %f
+	smudge = git hawser smudge %f
+	required = true
+[ghq]
+	root = /home/hiro/src/go
