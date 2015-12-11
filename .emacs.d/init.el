@@ -17,7 +17,7 @@
     (goto-char (point-max))
     (eval-print-last-sexp)))
 
-(el-get-bundle bind-key)
+(el-get-bundle elpa:bind-key)
 (el-get-bundle auto-complete)
 ;;(el-get-bundle popwin)
 (el-get-bundle window-number)
@@ -40,7 +40,7 @@
 (el-get-bundle typescript)
 (el-get-bundle tss)
 (el-get-bundle php-mode)
-;(el-get-bundle gtags)
+(el-get-bundle gtags)
 
 (require 'gtags)
 (el-get-bundle helm)
