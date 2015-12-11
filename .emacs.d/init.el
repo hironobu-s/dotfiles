@@ -175,10 +175,9 @@
 (load-theme 'smyx t)
 
 ;;; 背景を黒に
-(custom-theme-set-faces
-;  'deeper-blue
-  'smyx
-  '(default ((t (:background "#000000" :foreground "#FFFFFF")))))
+;(custom-theme-set-faces
+;  'smyx
+;  '(default ((t (:background "#000000" :foreground "#FFFFFF")))))
 
 
 ;; フォントの設定
