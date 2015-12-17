@@ -22,6 +22,7 @@
 ;;(el-get-bundle popwin)
 (el-get-bundle window-number)
 (el-get-bundle smyx-theme)
+
 ;; (el-get-bundle rainbow-delimiters)
 (el-get-bundle align)
 (el-get-bundle yasnippet)
@@ -41,6 +42,7 @@
 (el-get-bundle tss)
 (el-get-bundle php-mode)
 (el-get-bundle gtags)
+(el-get-bundle dockerfile-mode)
 
 (require 'gtags)
 (el-get-bundle helm)
@@ -173,6 +175,7 @@
 ;; theme
 (require 'smyx-theme)
 (load-theme 'smyx t)
+
 
 ;;; 背景を黒に
 ;(custom-theme-set-faces
@@ -429,12 +432,14 @@
 ;; (define-key gtags-select-mode-map "\C-j" 'gtags-select-tag)
 
 ;; magit
+(require 'magit)
 (setq magit-auto-revert-mode nil)
 (global-set-key (kbd "C-c C-g") 'magit-status)
 ;; (global-set-key (kbd "C-c C-g C-c") 'magit-commit)
 ;; (global-set-key (kbd "C-c C-g C-d") 'magit-diff)
 ;; (global-set-key (kbd "C-c C-g C-l") 'magit-log)
 
+(set-face-background 'magit-section-highlight "#303033")
 
 ;; ----------------------------------------------------------------------------------
 ;; Misc
