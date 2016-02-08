@@ -2,7 +2,7 @@
 
 
 # Path to your oh-my-zsh installation.
-export ZSH=/home/hiro/.oh-my-zsh
+export ZSH=~/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -168,3 +168,5 @@ alias -g G='| grep'
 #  export PATH=${HOME}/.rbenv/bin:${PATH} && \
 #  eval "$(rbenv init -)"
 
+# Aliases
+alias ec="emacsclient -n"
