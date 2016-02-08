@@ -361,7 +361,7 @@
 
 (add-hook 'php-mode-hook
           (lambda ()
-	    (php-enable-psr2-coding-style)
+;	    (php-enable-psr2-coding-style)
 	    (camelCase-mode 1)
             (local-set-key (kbd "C-c C-s") 'replace-string)
             (local-set-key (kbd "C-c C-r") 'replace-regexp)
@@ -484,5 +484,8 @@
 (setq kill-whole-line 1)
 (put 'downcase-region 'disabled nil)
 
-;; server
-(server-start)
+;; Emacs server
+;; (setq server-host "192.168.34.146")
+;; (setq server-use-tcp t)
+(unless (server-running-p)
+   (server-start))
