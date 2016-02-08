@@ -468,7 +468,9 @@
 ;;       scroll-step 1)
 
 ;; スクロールバーを表示しない
-(scroll-bar-mode -1)
+(if window-system
+        (progn
+	  (scroll-bar-mode -1)))
 
 ;;;バックアップ・オートセーブファイルの作成をやめる
 (setq make-backup-files nil)
