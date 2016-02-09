@@ -92,6 +92,8 @@ source $ZSH/oh-my-zsh.sh
 
 # ----------------------------------------------------------------------------------------------------------
 
+# TERM
+export TERM=xterm-256color
 
 # PATH
 #export PATH="~/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
