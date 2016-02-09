@@ -178,9 +178,9 @@
 
 
 ;;; 背景を黒に
-;(custom-theme-set-faces
-;  'smyx
-;  '(default ((t (:background "#000000" :foreground "#FFFFFF")))))
+(custom-theme-set-faces
+ 'smyx
+ '(default ((t (:background "#000000" :foreground "#FFFFFF")))))
 
 
 ;; フォントの設定
