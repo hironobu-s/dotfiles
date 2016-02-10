@@ -132,6 +132,9 @@ setopt share_history
 WORDCHARS=${WORDCHARS:s,/,,}
 WORDCHARS=${WORDCHARS:s,_,,}
 
+# プロンプトを変更
+PROMPT='[%{$fg[cyan]%}%n%{$reset_color%}@%{$fg[magenta]%}%m%{$reset_color%}]%(!.#.$) '
+RPROMPT='%{$fg[green]%}%~%{$reset_color%}$(git_prompt_info)'
 
 ## ディレクトリ名だけでcdする。
 setopt auto_cd
