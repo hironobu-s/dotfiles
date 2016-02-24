@@ -21,7 +21,6 @@
 (el-get-bundle auto-complete)
 ;;(el-get-bundle popwin)
 (el-get-bundle window-number)
-(el-get-bundle smyx-theme)
 
 ;; (el-get-bundle rainbow-delimiters)
 (el-get-bundle align)
@@ -173,13 +172,12 @@
 (window-number-meta-mode)
 
 ;; theme
-(require 'smyx-theme)
-(load-theme 'smyx t)
+(load-theme 'wombat t)
 
 
 ;;; 背景を黒に
 (custom-theme-set-faces
- 'smyx
+ 'wombat
  '(default ((t (:background "#000000" :foreground "#FFFFFF")))))
 
 
