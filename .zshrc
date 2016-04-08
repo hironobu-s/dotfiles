@@ -97,7 +97,7 @@ export TERM=xterm-256color
 
 # PATH
 #export PATH="~/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-export PATH="/home/hiro/local/bin":$PATH
+export PATH="~/.local/bin:/home/hiro/local/bin":$PATH
 
 # Alias
 alias j=jobs
@@ -176,3 +176,5 @@ alias -g G='| grep'
 
 # Aliases
 alias ec="emacsclient -n"
+
+source /home/hiro/.gvm/scripts/gvm
