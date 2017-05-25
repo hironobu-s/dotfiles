@@ -1,4 +1,11 @@
 ;; path
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp")
 (add-to-list 'load-path "~/.emacs.d/site-lisp")
 
@@ -40,14 +47,27 @@
 (el-get-bundle typescript)
 (el-get-bundle tss)
 (el-get-bundle php-mode)
+(el-get-bundle web-mode)
+(el-get-bundle scss-mode)
 (el-get-bundle gtags)
 (el-get-bundle dockerfile-mode)
+(el-get-bundle sql-indent)
+(el-get-bundle sql-complete)
+(el-get-bundle sql-transform)
+(el-get-bundle revive)
+(el-get-bundle bm)
+(el-get-bundle flycheck)
+(el-get-bundle pos-tip)
+(el-get-bundle flycheck-tip)
+(el-get-bundle csv-mode)
 
-(require 'gtags)
+
+;(require 'gtags)
 (el-get-bundle helm)
 (el-get-bundle helm-gtags)
 (el-get-bundle magit)
-
+(el-get-bundle deferred)
+(el-get-bundle helm-go-package)
 
 ;; ----------------------------------------------------------------------------------
 ;; Keybindings
@@ -85,6 +105,9 @@
 
 ; インデント
 (global-set-key (kbd "C-M-¥") 'indent-region)
+
+; バッファ移動
+; (global-set-key (kbd "C-o") 'other-window)
 
 ; カーソル移動などの一部を camel case に変更
 (autoload 'camelCase-mode "camelCase-mode" nil t)
@@ -207,11 +230,17 @@
 ;; yasnippet
 (require 'yasnippet)
 (yas-global-mode 1)
+(define-key yas-minor-mode-map (kbd "M-s") 'yas-insert-snippet)
 
 ;; helm
 (require 'helm-config)
 (bind-key "C-;" 'helm-mini)
 (helm-mode 1)
+
+;; flycheck
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(setq flycheck-display-errors-delay 0.2)
+
 
 ; 候補数を表示しない(パフォーマンスアップ)
 (fset 'helm-show-candidate-number 'ignore)
@@ -239,6 +268,35 @@
 (define-key global-map (kbd "C-x c")   'helm-find-files)
 (define-key global-map (kbd "C-x C-f")   'helm-find-files)
 
+;; bm
+(require 'bm)
+(global-set-key (kbd "M-SPC") 'bm-toggle)
+(global-set-key (kbd "M-p") 'bm-previous)
+(global-set-key (kbd "M-n") 'bm-next)
+(global-set-key (kbd "M-s") 'bm-show)
+
+;; save bookmarks
+(setq-default bm-buffer-persistence t)
+;; filename to store persistent bookmarks
+(setq bm-repository-file "/Users/peccu/.emacs.d/.bm-repository")
+;; Loading the repository from file when on start up.
+(add-hook' after-init-hook 'bm-repository-load)
+
+;; Restoring bookmarks when on file find.
+(add-hook 'find-file-hooks 'bm-buffer-restore)
+
+;; Saving bookmark data on killing and saving a buffer
+(add-hook 'kill-buffer-hook 'bm-buffer-save)
+(add-hook 'auto-save-hook 'bm-buffer-save)
+(add-hook 'after-save-hook 'bm-buffer-save)
+
+;; Saving the repository to file when on exit.
+;; kill-buffer-hook is not called when emacs is killed, so we
+;; must save all bookmarks first.
+(add-hook 'kill-emacs-hook '(lambda nil
+			      (bm-buffer-save-all)
+			      (bm-repository-save)))
+
 
 ;; open-junk-file
 (require 'open-junk-file)
@@ -254,8 +312,18 @@
 ;(psession-mode 1)
 
 ;; tramp
-(require 'tramp)
-(setq tramp-default-method "ssh")
+;; (require 'tramp)
+;; (setq tramp-default-method "ssh")
+
+;;; revive.el の設定
+;; http://www.hasta-pronto.org/archives/2008/01/30-0235.php
+(autoload 'save-current-configuration "revive" "Save status" t)
+(autoload 'resume "revive" "Resume Emacs" t)
+(autoload 'wipe "revive" "Wipe emacs" t)
+(define-key ctl-x-map "F" 'resume)                        ; C-x F で復元
+(define-key ctl-x-map "K" 'wipe)                          ; C-x K でKill
+(define-key ctl-x-map "S" 'save-current-configuration)    ; C-x K で保存
+
 
 ;; ----------------------------------------------------------------------------------
 ;; Program mode
@@ -269,16 +337,30 @@
 (require 'auto-complete-config)
 (require 'go-direx)
 
-; フック
 (setq gofmt-command "goimports")
 (add-hook 'before-save-hook 'gofmt-before-save)
+
+;(autoload 'helm-go-package "helm-go-package") ;; Not necessary if using ELPA package
+(eval-after-load 'go-mode
+    '(substitute-key-definition 'go-import-add 'helm-go-package go-mode-map))
+
+;;; helm-doc
+(define-key go-mode-map (kbd "C-c C-d") 'godoc-at-point-function)
+
+;; flycheck-tip
+(define-key go-mode-map (kbd "C-c C-p") 'flycheck-previous-error)
+(define-key go-mode-map (kbd "C-c C-n") 'flycheck-next-error)
+(define-key go-mode-map (kbd "C-c C-l") 'flycheck-list-errors)
+
+(require 'flycheck-tip)
+(flycheck-tip-use-timer 'verbose)
 
 (add-hook 'go-mode-hook (lambda ()
 			  (auto-complete-mode)
 			  (camelCase-mode 1)
                           (local-set-key (kbd "C-c C-o") 'go-goto-imports)
-                          (local-set-key (kbd "C-c C-u") 'go-remove-unused-imports)
-                          (local-set-key (kbd "C-c C-k") 'godoc)
+                          ;; (local-set-key (kbd "C-c C-u") 'go-remove-unused-imports)
+                          ;; (local-set-key (kbd "C-c C-k") 'godoc)
 			  (local-set-key (kbd "C-j") 'newline-and-indent)
 			  (local-set-key (kbd "C-c C-j") 'go-direx-pop-to-buffer)
 			  (highlight-regexp "\\<err\\>" 'hi-red-b)
@@ -287,37 +369,36 @@
 (eval-after-load "go-mode"
   '(progn
      ;; key bindings
-     (define-key go-mode-map (kbd "C-c C-e") 'go-tmp-run)
      (define-key go-mode-map (kbd "M-.") 'godef-jump)
      (define-key go-mode-map (kbd "M--") 'pop-tag-mark)))
 
 ;; (eval-after-load 'go-mode
 ;;     '(substitute-key-definition 'go-import-add 'helm-go-package go-mode-map))
 
-(add-hook 'go-mode-hook 'go-eldoc-setup)
+;(add-hook 'go-mode-hook 'go-eldoc-setup)
 
-;; helper function
-(defun go ()
-  "run current buffer"
-  (interactive)
-  (compile (concat "go run \"" (buffer-file-name) "\"")))
+;; ;; helper function
+;; (defun go ()
+;;   "run current buffer"
+;;   (interactive)
+;;   (compile (concat "go run \"" (buffer-file-name) "\"")))
 
-(defun go-run-dir ()
-  "run current buffer"
-  (interactive)
-  (compile (concat "go run *.go")))
+;; (defun go-run-dir ()
+;;   "run current buffer"
+;;   (interactive)
+;;   (compile (concat "go run *.go")))
 
-;; helper function
-(defun go-build ()
-  "build current buffer"
-  (interactive)
-  (compile (concat "go build  \"" (buffer-file-name) "\"")))
+;; ;; helper function
+;; (defun go-build ()
+;;   "build current buffer"
+;;   (interactive)
+;;   (compile (concat "go build  \"" (buffer-file-name) "\"")))
 
-;; helper function
-(defun go-build-dir ()
-  "build current directory"
-  (interactive)
-  (compile "go build ."))
+;; ;; helper function
+;; (defun go-build-dir ()
+;;   "build current directory"
+;;   (interactive)
+;;   (compile "go build ."))
 
 
 ;; JavaScript
@@ -338,6 +419,34 @@
    '(progn
       (require 'tern-auto-complete)
       (tern-ac-setup)))
+
+
+;; sql-mode
+;;
+;; C-c C-c : 'sql-send-paragraph
+;; C-c C-r : 'sql-send-region
+;; C-c C-s : 'sql-send-string
+;; C-c C-b : 'sql-send-buffer
+
+(defun sql-mode-hooks()
+  (setq sql-indent-offset 2)
+  (setq indent-tabs-mode nil)
+  (sql-set-product "mysql"))
+
+(setq auto-mode-alist
+      (cons '("\\.sql$" . sql-mode) auto-mode-alist))
+
+;; starting SQL mode loading sql-indent / sql-complete
+(eval-after-load "sql"
+  '(progn
+     (load-library "sql-indent")
+     (load-library "sql-complete")
+     (load-library "sql-transform")))
+
+(add-hook 'sql-interactive-mode-hook
+	  '(lambda()
+	     (setq truncate-lines t
+		   truncate-partial-width-windows t)))
 
 
 ;; TypeScript
@@ -377,21 +486,58 @@
 
 ;; WEB-mode
 (add-hook 'web-mode-hook
-          (lambda ()
+	  (lambda ()
 	    "Hooks for Web mode."
 	    (local-set-key (kbd "C-c C-s") 'replace-string)
 	    (local-set-key (kbd "C-c C-r") 'replace-regexp)
+	    (local-set-key (kbd "C-j") 'newline-and-indent)
 
-	    (setq web-mode-markup-indent-offset    4)
-	    (setq web-mode-css-offset    4)
-	    (setq web-mode-script-offset 4)
-	    (setq web-mode-php-offset    4)
-	    (setq web-mode-java-offset   4)
-	    (setq web-mode-asp-offset    4)
-	    (setq indent-tabs-mode t)
-	    (setq tab-width 2)
-))
+	    (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 
+	    (camelCase-mode 1)
+	    (setq web-mode-markup-indent-offset    2)
+	    (setq web-mode-css-offset    2)
+	    (setq web-mode-script-offset 2)
+	    (setq web-mode-php-offset    2)
+	    (setq web-mode-java-offset   2)
+	    (setq web-mode-asp-offset    2)
+	    (setq indent-tabs-mode nil)
+
+	    (add-to-list 'ac-modes 'web-mode)
+	    (setq web-mode-enable-auto-closing t)
+	    (setq web-mode-enable-auto-pairing t)
+	    (setq web-mode-auto-close-style 1)
+	    (setq web-mode-tag-auto-close-style t)
+
+	    (setq web-mode-enable-current-element-highlight t)
+	    (setq web-mode-enable-block-face t)
+	    (setq web-mode-enable-current-column-highlight t)
+
+	    (setq web-mode-ac-sources-alist
+		  '(("css" . (ac-source-css-property))
+		    ("html" . (ac-source-words-in-buffer ac-source-abbrev))))
+	    ))
+
+;; scss-mode
+(require 'scss-mode)
+(add-to-list 'auto-mode-alist '("\\.scss$" . scss-mode))
+
+;; インデント幅を2にする
+;; コンパイルは compass watchで行うので自動コンパイルをオフ
+(defun scss-custom ()
+  "scss-mode-hook"
+  (and
+   (set (make-local-variable 'css-indent-offset) 2)
+   (set (make-local-variable 'scss-compile-at-save) nil)
+   )
+  )
+(add-hook 'scss-mode-hook
+	  '(lambda() (scss-custom)))
+
+
+;; CSV
+(require 'csv-mode)
+(add-to-list 'auto-mode-alist '("\\.csv$" . csv-mode))
 
 ;; gtags
 ;; (require 'gtags)
@@ -487,24 +633,27 @@
 (put 'downcase-region 'disabled nil)
 
 ;; Emacs server
-;; (setq server-host "192.168.34.146")
-;; (setq server-use-tcp t)
+;(setq server-host "133.130.90.161")
+;(setq server-port 12345)
+;(setq server-use-tcp t)
 (unless (server-running-p)
    (server-start))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#000000" "#FAB1AB" "#D1FA71" "#FFA600" "#7b68ee" "#dc8cc3" "#96D9F1" "#FFFFFF"])
- '(custom-safe-themes
-   (quote
-    ("62e183df524d390b595c0ad1bf1608163768f7ad4f58238b530d5d901be79f00" default)))
- '(fci-rule-color "#151515"))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
+
+;; (custom-set-variables
+;;  ;; custom-set-variables was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(ansi-color-names-vector
+;;    ["#000000" "#FAB1AB" "#D1FA71" "#FFA600" "#7b68ee" "#dc8cc3" "#96D9F1" "#FFFFFF"])
+;;  '(custom-safe-themes
+;;    (quote
+;;     ("62e183df524d390b595c0ad1bf1608163768f7ad4f58238b530d5d901be79f00" default)))
+;;  '(fci-rule-color "#151515"))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  )
