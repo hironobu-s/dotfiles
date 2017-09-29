@@ -5,21 +5,30 @@ set __fish_git_prompt_showupstream 'yes'
 set __fish_git_prompt_color_branch yellow
 
 # Status Chars
-set __fish_git_prompt_char_dirtystate '🚧'
+set __fish_git_prompt_char_dirtystate ''
 set __fish_git_prompt_char_stagedstate '→'
 set __fish_git_prompt_char_stashstate '↩'
 set __fish_git_prompt_char_upstream_ahead '↑'
 set __fish_git_prompt_char_upstream_behind '↓'
 
 function fish_prompt
-        set last_status $status
- 	set_color green
-	printf "%s" (whoami)
-	set_color cyan
-	printf "@%s" (hostname|cut -d . -f 1)
-	set_color normal
-        printf '%s ' (__fish_git_prompt)
-       set_color normal
+	 set last_status $status
+	 set_color green
+	 printf "→"
+	 set_color cyan
+	 printf " ʕ◔ϖ◔ʔ"
+	 set_color normal
+	 printf '%s ' (__fish_git_prompt)
+	 set_color normal
+
+	 # set last_status $status
+	 # set_color green
+	 # printf "ʕ◔ϖ◔ʔ %s" (whoami)
+	 # set_color cyan
+	 # printf "@%s" (hostname|cut -d . -f 1)
+	 # set_color normal
+	 # printf '%s ' (__fish_git_prompt)
+	 # set_color normal
 end
 
 function fish_right_prompt
@@ -56,7 +65,7 @@ export GOPATH=/home/hiro/go
 alias gp="cd $GOPATH/src/github.com/hironobu-s"
 
 # Google Cloud SDK
-bass source '/home/hiro/google-cloud-sdk/path.bash.inc'
+#bass source '/home/hiro/google-cloud-sdk/path.bash.inc'
 
 # ConoHa environments
 export OS_USERNAME=gncu47070904
