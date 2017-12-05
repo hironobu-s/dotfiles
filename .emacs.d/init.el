@@ -4,7 +4,6 @@
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
-(package-initialize)
 
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp")
 (add-to-list 'load-path "~/.emacs.d/site-lisp")
@@ -26,7 +25,7 @@
 
 (el-get-bundle elpa:bind-key)
 (el-get-bundle auto-complete)
-;;(el-get-bundle popwin)
+(el-get-bundle popwin)
 (el-get-bundle window-number)
 
 ;; (el-get-bundle rainbow-delimiters)
@@ -39,12 +38,11 @@
 (el-get-bundle go-mode)
 (el-get-bundle go-autocomplete)
 (el-get-bundle go-direx)
-(el-get-bundle go-eldoc)
+;(el-get-bundle go-eldoc)
 (el-get-bundle js2-mode)
 (el-get-bundle json-mode)
 (el-get-bundle markdown-mode)
 (el-get-bundle yaml-mode)
-(el-get-bundle typescript)
 (el-get-bundle tss)
 (el-get-bundle php-mode)
 (el-get-bundle web-mode)
@@ -68,6 +66,9 @@
 (el-get-bundle magit)
 (el-get-bundle deferred)
 (el-get-bundle helm-go-package)
+
+(package-initialize)
+
 
 ;; ----------------------------------------------------------------------------------
 ;; Keybindings
@@ -179,14 +180,13 @@
 ;(mac-auto-ascii-mode 1)
 
 ;; popwin.el
-;;(require 'popwin)
+;(require 'popwin)
 ;; おまじない（よく分かってない、、）
-;;(setq display-buffer-function 'popwin:display-buffer)
+;(setq display-buffer-function 'popwin:display-buffer)
 
 ;; ポップアップを画面下に表示
-;;(setq popwin:popup-window-position 'bottom)
-;(setq popwin:popup-window-position 'right)
-
+(setq popwin:popup-window-position 'bottom)
+;;(setq popwin:popup-window-position 'right)
 ;; popwinを閉じる
 ;(global-set-key (kbd "C-c C-c") 'popwin:close-popup-window)
 
@@ -333,6 +333,7 @@
 ; http://unknownplace.org/archives/golang-editing-with-emacs.htmlを参考にした
 
 (require 'go-mode)
+(require 'go-guru)
 (require 'go-autocomplete)
 (require 'auto-complete-config)
 (require 'go-direx)
@@ -345,25 +346,25 @@
     '(substitute-key-definition 'go-import-add 'helm-go-package go-mode-map))
 
 ;;; helm-doc
-(define-key go-mode-map (kbd "C-c C-d") 'godoc-at-point-function)
+;(define-key go-mode-map (kbd "C-c C-d") 'godoc-at-point-function)
 
 ;; flycheck-tip
-(define-key go-mode-map (kbd "C-c C-p") 'flycheck-previous-error)
-(define-key go-mode-map (kbd "C-c C-n") 'flycheck-next-error)
-(define-key go-mode-map (kbd "C-c C-l") 'flycheck-list-errors)
+;(define-key go-mode-map (kbd "C-c C-p") 'flycheck-previous-error)
+;(define-key go-mode-map (kbd "C-c C-n") 'flycheck-next-error)
+;(define-key go-mode-map (kbd "C-c C-l") 'flycheck-list-errors)
 
-(require 'flycheck-tip)
-(flycheck-tip-use-timer 'verbose)
+;(require 'flycheck-tip)
 
 (add-hook 'go-mode-hook (lambda ()
 			  (auto-complete-mode)
 			  (camelCase-mode 1)
-                          (local-set-key (kbd "C-c C-o") 'go-goto-imports)
+                          ;(local-set-key (kbd "C-c C-o") 'go-goto-imports)
                           ;; (local-set-key (kbd "C-c C-u") 'go-remove-unused-imports)
                           ;; (local-set-key (kbd "C-c C-k") 'godoc)
 			  (local-set-key (kbd "C-j") 'newline-and-indent)
-			  (local-set-key (kbd "C-c C-j") 'go-direx-pop-to-buffer)
+			  ;(local-set-key (kbd "C-c C-j") 'go-direx-pop-to-buffer)
 			  (highlight-regexp "\\<err\\>" 'hi-red-b)
+			  (go-guru-hl-identifier-mode)
 			  (setq tab-width 4)))
 
 (eval-after-load "go-mode"
@@ -371,6 +372,9 @@
      ;; key bindings
      (define-key go-mode-map (kbd "M-.") 'godef-jump)
      (define-key go-mode-map (kbd "M--") 'pop-tag-mark)))
+
+;; go guruのバッファをpopwinで表示
+(push '("*go-guru-output*") popwin:special-display-config)
 
 ;; (eval-after-load 'go-mode
 ;;     '(substitute-key-definition 'go-import-add 'helm-go-package go-mode-map))
