@@ -113,10 +113,6 @@
  'wombat
  '(default ((t (:background "#000000" :foreground "#FFFFFF")))))
 
-
-; go-modeとかで使う
-(global-hi-lock-mode 1)
-
 ;; ------------------------------------------------------------
 
 ;; Emacs server
@@ -217,13 +213,12 @@
   ;; :mode
   :hook (go-mode . (lambda ()
 		     (setq tab-width 4)
-		     (yas-minor-mode)
 		     (subword-mode)
-		     (company-mode)
 		     (auto-complete-mode)
 		     (flycheck-mode)
+		     (yas-minor-mode)
 		     (window-number-meta-mode)
-		     (highlight-regexp "\\<err\\>" 'hi-red-b)
+		     (highlight-regexp "\\_<err\\_>" 'hi-red-b)
 		     (substitute-key-definition 'go-import-add 'helm-go-package go-mode-map)))
 
   :config
