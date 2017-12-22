@@ -209,7 +209,10 @@
   :init
   (setq gofmt-command "goimports")
 
-  :bind (("C-j" . newline-and-indent))
+  :bind (
+	 ("M-." . godef-jump)
+	 ("M--" . pop-tag-mark)
+	 ("C-j" . newline-and-indent))
 
   ;; :mode
   :hook (go-mode . (lambda ()
