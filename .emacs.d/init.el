@@ -6,9 +6,7 @@
 	("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")
         ("org" . "http://orgmode.org/elpa/")))
 
-;(package-refresh-contents)
-
-(defvar my/favorite-packages
+(defvar packages
   '(
     ;; general
     bind-key
@@ -48,9 +46,16 @@
 
     ))
 
-(dolist (package my/favorite-packages)
-  (unless (package-installed-p package)
-    (package-install package)))
+(defun install-packages (packages)
+  (let ((refreshed nil))
+    (dolist (pack packages)
+      (unless (package-installed-p pack)
+	(unless refreshed
+	  (package-refresh-contents)
+	  (setq refreshed t))
+	(package-install pack)))))
+
+(install-packages packages)
 
 
 ;; -------------
@@ -125,8 +130,7 @@
   :config
   (global-undo-tree-mode t)
   (global-set-key (kbd "C-\\") 'undo-tree-redo)
-  (global-set-key (kbd "C-¥") 'undo-tree-redo)
-)
+  (global-set-key (kbd "C-¥") 'undo-tree-redo))
 
 ;; bm
 (use-package bm 
@@ -159,18 +163,15 @@
 	("TAB" . helm-execute-persistent-action)
 	
 	:map helm-read-file-map
-	("TAB" . helm-execute-persistent-action)
-	)
+	("TAB" . helm-execute-persistent-action))
   
   :config
-  (helm-mode 1)
-)
+  (helm-mode 1))
 
 ;; window-number
 (use-package window-number
   :config
-  (window-number-meta-mode)
-)
+  (window-number-meta-mode))
 
 ;; swiper-helm
 (use-package swiper-helm
@@ -181,8 +182,7 @@
   :config
   (setq magit-auto-revert-mode nil)
   (set-face-background 'magit-section-highlight "#303033")
-  (global-set-key (kbd "C-c C-g") 'magit-status)
-)
+  (global-set-key (kbd "C-c C-g") 'magit-status))
 
 ;; auto-complete
 (use-package auto-complete
@@ -201,9 +201,7 @@
 	 :map ac-completing-map
 	      ("M-n" . ac-next)
 	      ("M-p" . ac-previous)
-	      ("TAB" . ac-complete)
-	      )
-  )
+	      ("TAB" . ac-complete)))
 
 
 ;; ʕ◔ϖ◔ʔ < GO
@@ -225,8 +223,7 @@
 
   :config
   (add-hook 'before-save-hook 'gofmt-before-save)
-  (use-package go-autocomplete)
-)
+  (use-package go-autocomplete))
 
 ;; web-mode
 (use-package web-mode
@@ -254,7 +251,6 @@
   (setq web-mode-ac-sources-alist
 	'(("css" . (ac-source-css-property))
 	  ("html" . (ac-source-words-in-buffer ac-source-abbrev)))))
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -262,7 +258,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (helm-go-package pos-tip magit yasnippet yaml-mode window-number web-mode use-package swiper-helm sql-indent scss-mode php-mode markdown-mode json-mode go-autocomplete flycheck-tip counsel company-go bm))))
+    (sql-indent scss-mode web-mode php-mode yaml-mode markdown-mode json-mode counsel swiper-helm swiper helm helm-go-package go-autocomplete auto-complete undo-tree popwin pos-tip flycheck-tip flycheck bm yasnippet window-number use-package bind-key magit))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
