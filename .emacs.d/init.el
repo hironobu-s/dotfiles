@@ -209,13 +209,15 @@
   :init
   (setq gofmt-command "goimports")
 
+  :bind (("C-j" . newline-and-indent))
+
   ;; :mode
   :hook (go-mode . (lambda ()
 		     (setq tab-width 4)
+		     (yas-minor-mode)
 		     (subword-mode)
 		     (company-mode)
 		     (auto-complete-mode)
-		     (yas-minor-mode)
 		     (flycheck-mode)
 		     (window-number-meta-mode)
 		     (highlight-regexp "\\<err\\>" 'hi-red-b)
