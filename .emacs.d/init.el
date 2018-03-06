@@ -1,5 +1,7 @@
 (package-initialize)
 
+(add-to-list 'load-path "~/.emacs.d/site-lisp")
+
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")
@@ -28,8 +30,8 @@
     helm
 
     ;; swiper
-    swiper
-    swiper-helm
+    ;; swiper
+    ;; swiper-helm
 
     ;; ivy/counsel
     counsel
@@ -40,10 +42,11 @@
     markdown-mode
     yaml-mode
     php-mode
+    ac-php
     web-mode
     scss-mode
     sql-indent
-
+    rainbow-mode
     ))
 
 (defun install-packages (packages)
@@ -170,8 +173,15 @@
   (window-number-meta-mode))
 
 ;; swiper-helm
-(use-package swiper-helm
-  :bind (("C-s" . swiper-helm)))
+;; (use-package swiper-helm
+;;   :bind (("C-s" . swiper-helm)))
+
+;; yasnippet
+(use-package yasnippet
+  :ensure t
+  :diminish yas-minor-mode
+  :config
+  (yas-global-mode 1))
 
 ;; magit
 (use-package magit
@@ -216,7 +226,6 @@
 		     (subword-mode)
 		     (auto-complete-mode)
 		     (flycheck-mode)
-		     (yas-minor-mode)
 		     (window-number-meta-mode)
 		     (highlight-regexp "\\_<err\\_>" 'hi-red-b)
 		     (substitute-key-definition 'go-import-add 'helm-go-package go-mode-map)))
@@ -225,8 +234,29 @@
   (add-hook 'before-save-hook 'gofmt-before-save)
   (use-package go-autocomplete))
 
+;; php-mode
+(use-package php-mode
+  :config
+  (use-package ac-php)
+  :hook (php-mode . (lambda ()
+		      (auto-complete-mode t)
+                      (subword-mode)
+		      (setq ac-sources  '(ac-source-php ) )
+		      (define-key php-mode-map  (kbd "C-]") 'ac-php-find-symbol-at-point)   ;goto define
+		      (define-key php-mode-map  (kbd "C-t") 'ac-php-location-stack-back   ) ;go back
+		      )))
+
 ;; web-mode
 (use-package web-mode
+  :mode (("\\.html?\\'" . web-mode)
+	 ("\\.tpl\\'" . web-mode)
+         ("\\.vue\\'"   . web-mode))
+  
+  :hook (web-mode . (lambda ()
+		      (subword-mode)
+		      (rainbow-mode)
+		      ))
+  
   :config
   (bind-key "C-c C-s" 'replace-string)
   (bind-key "C-c C-r" 'replace-regexp)
@@ -251,6 +281,7 @@
   (setq web-mode-ac-sources-alist
 	'(("css" . (ac-source-css-property))
 	  ("html" . (ac-source-words-in-buffer ac-source-abbrev)))))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -258,10 +289,11 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (sql-indent scss-mode web-mode php-mode yaml-mode markdown-mode json-mode counsel swiper-helm swiper helm helm-go-package go-autocomplete auto-complete undo-tree popwin pos-tip flycheck-tip flycheck bm yasnippet window-number use-package bind-key magit))))
+    (rainbow-mode "rainbow-mode" sql-indent scss-mode web-mode php-mode yaml-mode markdown-mode json-mode counsel swiper-helm swiper helm helm-go-package go-autocomplete auto-complete undo-tree popwin pos-tip flycheck-tip flycheck bm yasnippet window-number use-package bind-key magit))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
