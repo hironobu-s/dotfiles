@@ -41,11 +41,13 @@ function fish_greeting
 end
 # Alias
 alias j=jobs
-alias lv="lv -c"
+alias lv="less -R"
 alias jq="jq -C"
 alias ec="emacsclient -nw"
 alias ecn="emacsclient"
 alias rm="rm -f"
+alias ll="ls-go -l"
+alias ps="grc ps"
 
 # ロケール
 export LANG=ja_JP.UTF-8
@@ -78,3 +80,5 @@ export OS_TENANT_ID=6150e7c42bab40c59db53d415629841f
 set PATH $PATH ~/local/bin
 set PATH $PATH $GOROOT/bin
 set PATH $PATH $GOPATH/bin
+set PATH $PATH ~/.yarn/bin
+set PATH $PATH ~/.config/composer/vendor/bin/
