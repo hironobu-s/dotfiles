@@ -224,6 +224,7 @@
   :hook (go-mode . (lambda ()
 		     (setq tab-width 4)
 		     (subword-mode)
+		     (show-paren-mode)
 		     (auto-complete-mode)
 		     (flycheck-mode)
 		     (window-number-meta-mode)
