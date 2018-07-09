@@ -34,7 +34,7 @@
     ;; swiper-helm
 
     ;; ivy/counsel
-    counsel
+    ;; counsel
 
     ;; program-mode
     go-mode
@@ -110,10 +110,10 @@
           (scroll-bar-mode -1)))
 
 ;; theme
-(load-theme 'wombat t)
+(load-theme 'deeper-blue t)
 ;;; 背景を黒に
 (custom-theme-set-faces
- 'wombat
+ 'deeper-blue
  '(default ((t (:background "#000000" :foreground "#FFFFFF")))))
 
 ;; ------------------------------------------------------------
@@ -229,6 +229,7 @@
 		     (flycheck-mode)
 		     (window-number-meta-mode)
 		     (highlight-regexp "\\_<err\\_>" 'hi-red-b)
+		     (highlight-regexp "\\_<errCh\\_>" 'hi-red-b)
 		     (substitute-key-definition 'go-import-add 'helm-go-package go-mode-map)))
 
   :config
