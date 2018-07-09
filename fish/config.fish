@@ -13,9 +13,9 @@ set __fish_git_prompt_char_upstream_behind '↓'
 
 function fish_prompt
 	 set last_status $status
-	 set_color green
+	 set_color 2D5 
 	 printf "→"
-	 set_color cyan
+	 set_color 29F
 	 printf " ʕ◔ϖ◔ʔ"
 	 set_color normal
 	 printf '%s ' (__fish_git_prompt)
@@ -49,6 +49,8 @@ alias rm="rm -f"
 alias ll="ls-go -l"
 alias ps="grc ps"
 
+alias emacs="env TERM=xterm-24bits ~/local/bin/emacs"
+
 # ロケール
 export LANG=ja_JP.UTF-8
 export LC_CTYPE=ja_JP.UTF-8
@@ -80,5 +82,5 @@ export OS_TENANT_ID=6150e7c42bab40c59db53d415629841f
 set PATH $PATH ~/local/bin
 set PATH $PATH $GOROOT/bin
 set PATH $PATH $GOPATH/bin
-set PATH $PATH ~/.yarn/bin
-set PATH $PATH ~/.config/composer/vendor/bin/
+#set PATH $PATH ~/.yarn/bin
+#set PATH $PATH ~/.config/composer/vendor/bin/
