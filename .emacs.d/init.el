@@ -29,6 +29,9 @@
     ;; helm
     helm
 
+    ;; theme
+    color-theme-modern
+
     ;; swiper
     ;; swiper
     ;; swiper-helm
@@ -80,6 +83,11 @@
 ;; ; インデント
 (bind-key "C-M-¥" 'indent-region)
 
+;; ファンクションキーを無効にする
+(define-key global-map [f1] nil)
+(define-key global-map [f2] nil)
+(define-key global-map [f3] nil)
+
 ;; ----------------------------------------------------------
 
 ;; 起動時のメッセージを表示しない
@@ -111,10 +119,12 @@
 
 ;; theme
 (load-theme 'deeper-blue t)
+;(load-theme 'subdued t)
+
 ;;; 背景を黒に
 (custom-theme-set-faces
  'deeper-blue
- '(default ((t (:background "#000000" :foreground "#FFFFFF")))))
+ '(default ((t (:background nil :foreground "#FFFFFF")))))
 
 ;; ------------------------------------------------------------
 
@@ -138,6 +148,12 @@
 	("M-p" . 'bm-previous)
 	("M-n" . 'bm-next)
 	("M-s" . 'bm-show)))
+
+;; fly-check
+(use-package flycheck
+  :bind (
+	 ("M-N" . 'flycheck-next-error)
+	 ("M-P" . 'flycheck-previous-error)))
 
 ;; helm
 (use-package helm
@@ -228,6 +244,7 @@
 		     (auto-complete-mode)
 		     (flycheck-mode)
 		     (window-number-meta-mode)
+		     (display-line-numbers-mode)
 		     (highlight-regexp "\\_<err\\_>" 'hi-red-b)
 		     (highlight-regexp "\\_<errCh\\_>" 'hi-red-b)
 		     (substitute-key-definition 'go-import-add 'helm-go-package go-mode-map)))
@@ -289,6 +306,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("b71da830ae97a9b70d14348781494b6c1099dbbb9b1f51494c3dfa5097729736" "d9e811d5a12dec79289c5bacaecd8ae393d168e9a92a659542c2a9bab6102041" "ec0c9d1715065a594af90e19e596e737c7b2cdaa18eb1b71baf7ef696adbefb0" "b4fd44f653c69fb95d3f34f071b223ae705bb691fb9abaf2ffca3351e92aa374" "4c8372c68b3eab14516b6ab8233de2f9e0ecac01aaa859e547f902d27310c0c3" default)))
  '(package-selected-packages
    (quote
     (rainbow-mode "rainbow-mode" sql-indent scss-mode web-mode php-mode yaml-mode markdown-mode json-mode counsel swiper-helm swiper helm helm-go-package go-autocomplete auto-complete undo-tree popwin pos-tip flycheck-tip flycheck bm yasnippet window-number use-package bind-key magit))))
