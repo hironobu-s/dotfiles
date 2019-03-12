@@ -18,6 +18,7 @@
     bm
     flycheck
     flycheck-tip
+    flymake-easy
     pos-tip
     magit
     popwin
@@ -25,6 +26,8 @@
     auto-complete
     go-autocomplete
     helm-go-package
+    avy
+    lsp-mode
     
     ;; helm
     helm
@@ -41,6 +44,7 @@
 
     ;; program-mode
     go-mode
+    js2-mode
     json-mode
     markdown-mode
     yaml-mode
@@ -50,6 +54,7 @@
     scss-mode
     sql-indent
     rainbow-mode
+    dockerfile-mode
     ))
 
 (defun install-packages (packages)
@@ -71,7 +76,7 @@
 
 ;; M-g でgoto-line
 (bind-key "M-g" 'goto-line)
-
+ 
 ;; C-r で replace-string
 (bind-key "C-c C-s" 'replace-string)
 (bind-key "C-c C-r" 'replace-regexp)
@@ -82,6 +87,10 @@
 
 ;; ; インデント
 (bind-key "C-M-¥" 'indent-region)
+
+;; forward-to-word, backward-to-word
+(bind-key "M-f" 'forward-word)
+(bind-key "M-b" 'backward-word)
 
 ;; ファンクションキーを無効にする
 (define-key global-map [f1] nil)
@@ -124,7 +133,33 @@
 ;;; 背景を黒に
 (custom-theme-set-faces
  'deeper-blue
- '(default ((t (:background nil :foreground "#FFFFFF")))))
+ '(default ((t (:background "#000000":foreground "#FFFFFF")))))
+
+;; 現在の行をハイライト
+;; (global-hl-line-mode t)
+
+;; (custom-set-faces
+;; '(hl-line ((t (:background "#111111"))))
+;; )
+;; (setq hl-line-face 'underline)
+
+;; ヤンクした内容ををクリップボードに送信
+(require 'osc52e)
+(osc52-set-cut-function)
+
+(custom-set-variables '(osc52-multiplexer 'tmux))
+;;(custom-set-variables '(osc52-multiplexer 'screen)) ;; screenを使っている場合はこっち
+
+;; osc52e自体はリージョンを送る関数は提供していないので、自分で定義する
+(defun osc52-send-region-to-clipboard (START END)
+  "Copy the region to the system clipboard using the OSC 52 escape sequence."
+  (interactive "r")
+  (osc52-interprogram-cut-function (buffer-substring-no-properties
+                           START END)))
+
+;; 適当にバインドする
+(global-set-key (kbd "C-x M-w") 'osc52-send-region-to-clipboard)
+
 
 ;; ------------------------------------------------------------
 
@@ -183,7 +218,7 @@
   :config
   (helm-mode 1))
 
-;; window-number
+;; window-number (switch window)
 (use-package window-number
   :config
   (window-number-meta-mode))
@@ -234,20 +269,42 @@
   :bind (
 	 ("M-." . godef-jump)
 	 ("M--" . pop-tag-mark)
-	 ("C-j" . newline-and-indent))
+	 ("C-j" . newline-and-indent)
+	 ("C-c C-c" . avy-goto-char-timer))
+
 
   ;; :mode
   :hook (go-mode . (lambda ()
 		     (setq tab-width 4)
+		     
+		     (setq flycheck-check-syntax-automatically '(mode-enabled save idle-change new-line))
+		     (setq flycheck-idle-change-delay 1)
 		     (subword-mode)
 		     (show-paren-mode)
 		     (auto-complete-mode)
 		     (flycheck-mode)
-		     (window-number-meta-mode)
-		     (display-line-numbers-mode)
+		     
+		     ;; (setq flycheck-go-build-tags " -o  *.go")
+		     ;;(window-number-meta-mode)
 		     (highlight-regexp "\\_<err\\_>" 'hi-red-b)
 		     (highlight-regexp "\\_<errCh\\_>" 'hi-red-b)
-		     (substitute-key-definition 'go-import-add 'helm-go-package go-mode-map)))
+		     (setq lsp-enable-completion-at-point t)
+		     
+		     (substitute-key-definition 'go-import-add 'helm-go-package go-mode-map)
+
+		     ;; (require 'lsp)
+		     ;; ;; (require 'lsp-clients)
+		     ;; ;; (setq lsp-clients-go-server (list "bingo" "--mode"  "stdio" "--logfile"  "/tmp/lspserver.log" "--trace" "--pprof" ":6060"))
+		     
+		     ;; (setq lsp-response-timeout 1000)
+		     ;; (lsp-register-client
+		     ;;  ;; (make-lsp-client :new-connection (lsp-stdio-connection (list "bingo" "--mode"  "stdio" "--logfile"  "/tmp/lspserver.log" "--trace" "--pprof" ":6060"))
+		     ;;  (make-lsp-client :new-connection (lsp-tcp-connection
+		     ;; 		       :major-modes '(go-mode)
+		     ;; 		       :server-id 'bingo))
+		     ;; (lsp-mode)
+		     ;; (lsp)
+		     ))
 
   :config
   (add-hook 'before-save-hook 'gofmt-before-save)
@@ -265,6 +322,23 @@
 		      (define-key php-mode-map  (kbd "C-t") 'ac-php-location-stack-back   ) ;go back
 		      )))
 
+;; js2-mode
+(use-package js2-mode
+  :mode (
+	 ("\\.js?\\'" . js2-mode)
+	 )
+  
+  :hook (js2-mode . (lambda ()
+			     (subword-mode)
+			     (show-paren-mode)
+			     (auto-complete-mode)
+			     ))
+  
+  :config 
+	 (bind-key "C-c C-s" 'replace-string)
+	 (bind-key "C-c C-r" 'replace-regexp)
+)
+
 ;; web-mode
 (use-package web-mode
   :mode (("\\.html?\\'" . web-mode)
@@ -274,6 +348,7 @@
   :hook (web-mode . (lambda ()
 		      (subword-mode)
 		      (rainbow-mode)
+		      (auto-complete-mode)
 		      ))
   
   :config
@@ -311,7 +386,7 @@
     ("b71da830ae97a9b70d14348781494b6c1099dbbb9b1f51494c3dfa5097729736" "d9e811d5a12dec79289c5bacaecd8ae393d168e9a92a659542c2a9bab6102041" "ec0c9d1715065a594af90e19e596e737c7b2cdaa18eb1b71baf7ef696adbefb0" "b4fd44f653c69fb95d3f34f071b223ae705bb691fb9abaf2ffca3351e92aa374" "4c8372c68b3eab14516b6ab8233de2f9e0ecac01aaa859e547f902d27310c0c3" default)))
  '(package-selected-packages
    (quote
-    (rainbow-mode "rainbow-mode" sql-indent scss-mode web-mode php-mode yaml-mode markdown-mode json-mode counsel swiper-helm swiper helm helm-go-package go-autocomplete auto-complete undo-tree popwin pos-tip flycheck-tip flycheck bm yasnippet window-number use-package bind-key magit))))
+    (lsp-mode avy dockerfile-mode rainbow-mode "rainbow-mode" sql-indent scss-mode web-mode php-mode yaml-mode markdown-mode json-mode counsel swiper-helm swiper helm helm-go-package go-autocomplete auto-complete undo-tree popwin pos-tip flycheck-tip flycheck bm yasnippet window-number use-package bind-key magit))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -319,3 +394,4 @@
  ;; If there is more than one, they won't work right.
  )
 
+;(put 'upcase-region 'disabled nil)
