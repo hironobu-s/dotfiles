@@ -84,3 +84,9 @@ set PATH $PATH $GOROOT/bin
 set PATH $PATH $GOPATH/bin
 #set PATH $PATH ~/.yarn/bin
 #set PATH $PATH ~/.config/composer/vendor/bin/
+
+# direnv
+eval (direnv hook fish)
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/hiro/google-cloud-sdk/path.fish.inc' ]; . '/home/hiro/google-cloud-sdk/path.fish.inc'; end
