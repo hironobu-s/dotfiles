@@ -46,8 +46,21 @@ alias jq="jq -C"
 alias ec="emacsclient -nw"
 alias ecn="emacsclient"
 alias rm="rm -f"
-alias ll="ls-go -l"
+alias ll="ls -lh"
 alias ps="grc ps"
+
+alias kc='kubectl'
+alias kclf='kubectl logs --tail=200  -f'
+alias kcgs='kubectl get service -o wide'
+alias kcgd='kubectl get deployment -o wide'
+alias kcgp='kubectl get pod -o wide'
+alias kcgn='kubectl get node -o wide'
+alias kcdp='kubectl describe pod'
+alias kcds='kubectl describe service'
+alias kcdd='kubectl describe deployment'
+alias kcdf='kubectl delete -f'
+alias kcaf='kubectl apply -f'
+alias kcci='kubectl cluster-info'
 
 alias emacs="env TERM=xterm-24bits ~/local/bin/emacs"
 
@@ -79,7 +92,9 @@ export OS_REGION_NAME=tyo1
 export OS_TENANT_ID=6150e7c42bab40c59db53d415629841f
 
 # PATH
+set PATH $PATH /snap/bin
 set PATH $PATH ~/local/bin
+set PATH $PATH ~/.local/bin
 set PATH $PATH $GOROOT/bin
 set PATH $PATH $GOPATH/bin
 #set PATH $PATH ~/.yarn/bin
@@ -90,3 +105,10 @@ eval (direnv hook fish)
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/home/hiro/google-cloud-sdk/path.fish.inc' ]; . '/home/hiro/google-cloud-sdk/path.fish.inc'; end
+
+# tabtab source for serverless package
+# uninstall by removing these lines or running `tabtab uninstall serverless`
+[ -f /home/hiro/test/mercury/mercury-parser-api/node_modules/tabtab/.completions/serverless.fish ]; and . /home/hiro/test/mercury/mercury-parser-api/node_modules/tabtab/.completions/serverless.fish
+# tabtab source for sls package
+# uninstall by removing these lines or running `tabtab uninstall sls`
+[ -f /home/hiro/test/mercury/mercury-parser-api/node_modules/tabtab/.completions/sls.fish ]; and . /home/hiro/test/mercury/mercury-parser-api/node_modules/tabtab/.completions/sls.fish
