@@ -62,7 +62,7 @@ alias kcdf='kubectl delete -f'
 alias kcaf='kubectl apply -f'
 alias kcci='kubectl cluster-info'
 
-alias emacs="env TERM=xterm-24bits ~/local/bin/emacs"
+#alias emacs="env TERM=xterm-24bits ~/local/bin/emacs"
 
 # ロケール
 export LANG=ja_JP.UTF-8
