@@ -12,14 +12,29 @@ set __fish_git_prompt_char_upstream_ahead '↑'
 set __fish_git_prompt_char_upstream_behind '↓'
 
 function fish_prompt
-	 set last_status $status
-	 set_color 2D5 
-	 printf "→"
-	 set_color 29F
-	 printf " ʕ◔ϖ◔ʔ"
-	 set_color normal
-	 printf '%s ' (__fish_git_prompt)
-	 set_color normal
+	set last_status $status
+	#set_color 2D5 
+	#printf "→"
+	set_color 29F
+	printf "ʕ◔ϖ◔ʔ "
+	if test $USER = "root"
+		set_color F00
+	else
+		set_color 2C9 
+	end
+	printf "%s" $USER 
+	printf "@" 
+	printf "%s" (prompt_hostname)
+	set_color 999 
+	printf ' %s' (prompt_pwd)
+	set_color normal
+	printf "%s " (__fish_vcs_prompt)
+
+	if test $USER = "root"
+	echo -n '# '
+	else
+	echo -n '$ '
+	end
 
 	 # set last_status $status
 	 # set_color green
@@ -32,8 +47,9 @@ function fish_prompt
 end
 
 function fish_right_prompt
-	set_color brgrey
-	printf "%s" (pwd)
+	#set_color brgrey
+	#printf "%s@%s" $USER (prompt_hostname)
+	#set_color normal
 end
 
 function fish_greeting
