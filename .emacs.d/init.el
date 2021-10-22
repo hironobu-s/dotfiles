@@ -2,6 +2,7 @@
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp")
 
+(setq package-check-signature nil)
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")
@@ -15,6 +16,8 @@
     use-package
     window-number
     yasnippet
+    helm
+    helm-go-package
     bm
     flycheck
     flycheck-tip
@@ -25,7 +28,6 @@
     undo-tree
     ;auto-complete
     go-autocomplete
-    helm-go-package
     avy
     
     ;eglot
@@ -34,9 +36,12 @@
     company-lsp
     lsp-ui
     
-    ;; helm
-    helm
-
+    eglot
+    company
+    ;lsp-mode
+    ;company-lsp
+    ;lsp-ui
+    
     ;; theme
     color-theme-modern
 
@@ -207,10 +212,15 @@
 
 ;; undo-tree
 (use-package undo-tree
+  :bind (
+	("M-/" . 'undo-tree-redo)
+	("C-¥" . 'undo-tree-redo))
+  
   :config
-  (global-undo-tree-mode t)
   (global-set-key (kbd "C-\\") 'undo-tree-redo)
-  (global-set-key (kbd "C-¥") 'undo-tree-redo))
+  (global-set-key (kbd "C-¥") 'undo-tree-redo)
+  (global-undo-tree-mode t))
+
 
 ;; bm
 (use-package bm 
@@ -237,7 +247,7 @@
 	("C-c i" . 'helm-imenu)
 	("C-x b" . 'helm-buffers-list)
 	("C-x c" . 'helm-find-files)
-	("C-x C-f" . 'helm-find-files)   
+	("C-x C-f" . 'helm-find-files)
 
 	:map helm-map
 	("C-h" . delete-backward-char)
@@ -297,12 +307,21 @@
 ;; 	      ("TAB" . ac-complete)))
 
 
+<<<<<<< HEAD
 ;; (use-package eglot
 ;;   :config
 ;;   (define-key eglot-mode-map (kbd "M-.") 'xref-find-definitions)
 ;;   (define-key eglot-mode-map (kbd "M--") 'pop-tag-mark)
 ;;   (add-to-list 'eglot-server-programs '(go-mode . ("gopls")))
 ;;   (add-hook 'go-mode-hook 'eglot-ensure))
+=======
+(use-package eglot
+  :config
+  (define-key eglot-mode-map (kbd "M-.") 'xref-find-definitions)
+  (define-key eglot-mode-map (kbd "M--") 'pop-tag-mark)
+;  (add-to-list 'eglot-server-programs '(go-mode . ("gopls")))
+  (add-hook 'go-mode-hook 'eglot-ensure))
+>>>>>>> 2ec040729750fd524dd5f1a1dd352913f80528a1
 
 
 ;; (use-package lsp-go
@@ -314,6 +333,7 @@
 ;;   :hook (go-mode . lsp-go-enable)
 ;;   :commands lsp-go-enable)
 
+<<<<<<< HEAD
 (use-package lsp-mode
   :custom ((lsp-inhibit-message t)
          (lsp-message-project-root-warning t)
@@ -359,6 +379,54 @@
   :config
   (global-company-mode)
   (setq company-idle-delay 0)
+=======
+;; (use-package lsp-mode
+;;   :custom ((lsp-inhibit-message t)
+;;          (lsp-message-project-root-warning t)
+;;          (create-lockfiles nil))
+;;   :hook   (prog-major-mode . lsp-prog-major-mode-enable))
+
+;; (use-package lsp-ui
+;;   :after lsp-mode
+;;   :custom (scroll-margin 0)
+;;   (lsp-ui-doc-enable nil)
+;;   (lsp-ui-doc-header nil)
+;;   (lsp-ui-doc-include-signature t)
+;;   (lsp-ui-doc-max-height 30)
+;;   (lsp-ui-doc-max-width 150)
+;;   (lsp-ui-doc-position (quote at-point))
+;;   (lsp-ui-doc-use-childframe nil)
+;;   (lsp-ui-doc-use-webkit nil)
+;;   (lsp-ui-flycheck-enable nil)
+;;   (lsp-ui-imenu-enable nil)
+;;   (lsp-ui-imenu-kind-position (quote top))
+;;   (lsp-ui-peek-enable nil)
+;;   (lsp-ui-peek-fontify (quote on-demand))
+;;   (lsp-ui-peek-list-width 50)
+;;   (lsp-ui-peek-peek-height 20)
+;;   (lsp-ui-sideline-enable nil)
+  
+;;   :hook   (lsp-mode . lsp-ui-mode))
+
+;; (use-package company-lsp
+;;   :after (lsp-mode company yasnippet)
+;;   :defines company-backends
+;;   ;; :functions company-backend-with-yas
+;;   ;; :init (cl-pushnew (company-backend-with-yas 'company-lsp) company-backends))
+;; )
+
+;; company-mode
+(use-package company
+  :bind (
+;	 ("C-i" . helm-imenu)
+  ;; 	 ("C-s" . company-filter-candidates)
+  ;; 	 ("C-h" . nil))
+	 )
+  
+  :config
+  (global-company-mode)
+  (setq company-idle-delay 0.05)
+>>>>>>> 2ec040729750fd524dd5f1a1dd352913f80528a1
   (setq company-minimum-prefix-length 1)
   (setq completion-ignore-case t)
   (setq company-dabbrev-downcase nil)
@@ -387,24 +455,41 @@
 ;; ʕ◔ϖ◔ʔ < GO
 (use-package go-mode
   :init
+<<<<<<< HEAD
   (add-hook 'go-mode-hook #'lsp)
+=======
+  ;(add-hook 'go-mode-hook #'lsp)
+>>>>>>> 2ec040729750fd524dd5f1a1dd352913f80528a1
   
   :bind (
   	 ("M-." . lsp-ui-peek-find-definitions)
   	 ("M--" . pop-tag-mark)
+<<<<<<< HEAD
 	 ("C-c i" . lsp-ui-imenu)
+=======
+	 ;("C-c C-i" . helm-imenu)
+>>>>>>> 2ec040729750fd524dd5f1a1dd352913f80528a1
   	 ("C-j" . newline-and-indent))
   	 ;("C-c C-c" . avy-goto-char-timer))
 
   ;; :mode
   :hook (go-mode . (lambda ()
 		     (setq tab-width 4)
+<<<<<<< HEAD
 		     ;; (setq flycheck-check-syntax-automatically '(mode-enabled save idle-change new-line))
 		     ;; (setq flycheck-idle-change-delay 1)
 		     (subword-mode)
 		     (show-paren-mode)
 		     ;(auto-complete-mode)
 		     (flycheck-mode)
+=======
+		     ;(setq flycheck-check-syntax-automatically '(mode-enabled save idle-change new-line))
+		     ;(setq flycheck-idle-change-delay 3)
+		     (subword-mode)
+		     (show-paren-mode)
+		     ;(auto-complete-mode)
+		     ;(flycheck-mode)
+>>>>>>> 2ec040729750fd524dd5f1a1dd352913f80528a1
 		     
 		     ;; (setq flycheck-go-build-tags " -o  *.go")
 		     ;;(window-number-meta-mode)
