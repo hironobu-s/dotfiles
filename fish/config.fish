@@ -12,14 +12,29 @@ set __fish_git_prompt_char_upstream_ahead '↑'
 set __fish_git_prompt_char_upstream_behind '↓'
 
 function fish_prompt
-	 set last_status $status
-	 set_color 2D5 
-	 printf "→"
-	 set_color 29F
-	 printf " ʕ◔ϖ◔ʔ"
-	 set_color normal
-	 printf '%s ' (__fish_git_prompt)
-	 set_color normal
+	set last_status $status
+	#set_color 2D5 
+	#printf "→"
+	set_color 29F
+	printf "ʕ◔ϖ◔ʔ "
+	if test $USER = "root"
+		set_color F00
+	else
+		set_color 2C9 
+	end
+	printf "%s" $USER 
+	printf "@" 
+	printf "%s" (prompt_hostname)
+	set_color 999 
+	printf ' %s' (prompt_pwd)
+	set_color normal
+	printf "%s " (__fish_vcs_prompt)
+
+	if test $USER = "root"
+	echo -n '# '
+	else
+	echo -n '$ '
+	end
 
 	 # set last_status $status
 	 # set_color green
@@ -32,8 +47,9 @@ function fish_prompt
 end
 
 function fish_right_prompt
-	set_color brgrey
-	printf "%s" (pwd)
+	#set_color brgrey
+	#printf "%s@%s" $USER (prompt_hostname)
+	#set_color normal
 end
 
 function fish_greeting
@@ -46,10 +62,23 @@ alias jq="jq -C"
 alias ec="emacsclient -nw"
 alias ecn="emacsclient"
 alias rm="rm -f"
-alias ll="ls-go -l"
+alias ll="ls -lh"
 alias ps="grc ps"
 
-alias emacs="env TERM=xterm-24bits ~/local/bin/emacs"
+alias kc='kubectl'
+alias kclf='kubectl logs --tail=200  -f'
+alias kcgs='kubectl get service -o wide'
+alias kcgd='kubectl get deployment -o wide'
+alias kcgp='kubectl get pod -o wide'
+alias kcgn='kubectl get node -o wide'
+alias kcdp='kubectl describe pod'
+alias kcds='kubectl describe service'
+alias kcdd='kubectl describe deployment'
+alias kcdf='kubectl delete -f'
+alias kcaf='kubectl apply -f'
+alias kcci='kubectl cluster-info'
+
+#alias emacs="env TERM=xterm-24bits ~/local/bin/emacs"
 
 # ロケール
 export LANG=ja_JP.UTF-8
@@ -79,6 +108,8 @@ export OS_REGION_NAME=tyo1
 export OS_TENANT_ID=6150e7c42bab40c59db53d415629841f
 
 # PATH
+set PATH $PATH /snap/bin
+#set PATH $PATH ~/dev/flutter/bin
 set PATH $PATH ~/local/bin
 set PATH $PATH $GOROOT/bin
 set PATH $PATH $GOPATH/bin
@@ -86,7 +117,5 @@ set PATH $PATH $GOPATH/bin
 #set PATH $PATH ~/.config/composer/vendor/bin/
 
 # direnv
-eval (direnv hook fish)
+#eval (direnv hook fish)
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/hiro/google-cloud-sdk/path.fish.inc' ]; . '/home/hiro/google-cloud-sdk/path.fish.inc'; end
