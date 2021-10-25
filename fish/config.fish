@@ -109,10 +109,6 @@ export OS_TENANT_ID=6150e7c42bab40c59db53d415629841f
 
 # PATH
 set PATH $PATH /snap/bin
-<<<<<<< HEAD
-#set PATH $PATH ~/dev/flutter/bin
-=======
->>>>>>> 2ec040729750fd524dd5f1a1dd352913f80528a1
 set PATH $PATH ~/local/bin
 set PATH $PATH ~/.local/bin
 set PATH $PATH $GOROOT/bin
